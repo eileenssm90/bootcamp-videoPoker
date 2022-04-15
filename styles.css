@@ -1,0 +1,72 @@
+#header {
+  text-align: center;
+}
+
+#output-div {
+  float: top;
+  text-align: center;
+}
+
+#cardContainer {
+  width: 100%;
+  display: inline-flex;
+  justify-content: space-evenly;
+  position: center;
+}
+
+/* #output-div-player1 {
+  position: relative;
+  left: 450px;
+}
+
+#output-div-player2 {
+  width: 50%;
+  display: flex;
+  vertical-align: middle;
+  position: relative;
+  left: 450px; */
+}
+
+img {
+  display: inline-flex;
+  max-width: 100px;
+  z-index: 1;
+}
+
+#betButton {
+  background-color: transparent;
+  border: none;
+  height: 50px;
+  width: 50px;
+}
+
+#buttonArray {
+  position: relative;
+  left: 450px;
+}
+
+#buttonPlayer1 {
+  display: inline-flex;
+  justify-items: center;
+}
+
+#buttonPlayer2 {
+  display: inline-flex;
+  position: center;
+}
+
+.grid {
+  width: 100%;
+}
+
+.square {
+  padding: 10px;
+  margin: 10px;
+  background-color: white;
+  display: inline-flex;
+  height: 70px;
+  width: 70px;
+  border-radius: 8px;
+  vertical-align: top;
+  z-index: 2;
+}

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Eileen's Video Poker</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      body {
+        font-family: "Open Sans", sans-serif;
+        margin-left: 30px;
+        margin-right: 30px;
+        background-color: white;
+        color: white; /* sets the font color */
+        background-image: url("https://pl.sterlingcdn.com/wp-content/uploads/sites/3/2018/07/blackjack-classic-background.jpg"); /* The image used */
+        background-position: center; /* Center the image */
+        background-repeat: no-repeat; /* Do not repeat the image */
+        background-size: stretch; /* Resize the background image to cover the entire container */
+      }
+
+      /* increase header font size on wider screens */
+      @media screen and (min-width: 600px) {
+        .header {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1 id="header">Video poker</h1>
+
+    <!--Insert output field -->
+    <div id="output-div-words">Choose the number of cards to draw</div>
+    <div id="output-div"></div>
+    <br />
+    <!-- <div id="cardContainer"> -->
+    <!-- <div id></div>
+    <h2 id="player1Card">
+      <div id="output-div-player1"></div>
+    </h2>
+
+    <h2 id="player2Card">
+      <div id="output-div-player2"></div>
+    </h2>
+    <br /> -->
+    <!-- </div> -->
+    <div id="buttonArray">
+      <!-- <input id="inputField" />
+        <button id="inputButton">Choose number of draws</button> -->
+      <button id="dealButton">Deal</button>
+      <button id="shuffleButton">Shuffle</button>
+      <button id="betButton">
+        <img
+          src="/Users/macbookpro/Library/Mobile Documents/com~apple~CloudDocs/10. Coding/bootcamp/Projects/20220406 videoPoker/images/chip.png"
+        />
+      </button>
+
+      <!-- <button id="buttonPlayer2">Reshu</button> -->
+      <!-- <button id="next">Click to see who wins?</button>
+          <button id="restart">Play again</button> -->
+    </div>
+
+    <button id="openModal">Winning table</button>
+
+    <table>
+      <tr>
+        <th>Your score</th>
+        <td id="payTable"></td>
+      </tr>
+      <tr>
+        <th>Your bet</th>
+        <td id="betTable"></td>
+      </tr>
+    </table>
+
+    <dialog class="modal" id="payTableModal">
+      <h2>Pay Table</h2>
+      <table>
+        <tr>
+          <th>Your hand</th>
+          <th>Multiplier</th>
+        </tr>
+        <tr>
+          <td>Royal flush</td>
+          <td>250</td>
+        </tr>
+        <tr>
+          <td>Straight flush</td>
+          <td>50</td>
+        </tr>
+        <tr>
+          <td>Flush</td>
+          <td>6</td>
+        </tr>
+        <tr>
+          <td>Full house</td>
+          <td>9</td>
+        </tr>
+        <tr>
+          <td>Four of a kind</td>
+          <td>25</td>
+        </tr>
+        <tr>
+          <td>Three of a kind</td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td>Two pairs</td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td>Jacks or Better</td>
+          <td>1</td>
+        </tr>
+      </table>
+      <button id="closeModal">Close</button>
+    </dialog>
+
+    <!-- Import program logic -->
+    <script src="script.js"></script>
+  </body>
+</html>

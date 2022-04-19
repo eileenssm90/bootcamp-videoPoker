@@ -1,3 +1,4 @@
+/* eslint-disable no-loop-func */
 /* eslint-disable prefer-const */
 /* ========================================================================== */
 /* ========================================================================== */
@@ -28,34 +29,66 @@
 /* ========================================================================== */
 /* ========================================================================== */
 
-const grid = document.createElement('div');
-grid.setAttribute('class', 'grid');
-document.body.appendChild(grid);
+const grid = document.getElementById('grid');
 
 let buttonDeal = document.getElementById('dealButton');
 let buttonShuffle = document.getElementById('shuffleButton');
 let buttonBet = document.getElementById('betButton');
 let outputBox = document.getElementById('output-div');
 const outputBoxWords = document.getElementById('output-div-words');
+
+let bet = 0;
 let payTable = document.getElementById('payTable');
 let betTable = document.getElementById('betTable');
+
+let betAmount1 = document.getElementById('bet-amount-1');
+let betAmount2 = document.getElementById('bet-amount-2');
+let betAmount3 = document.getElementById('bet-amount-3');
+let betAmount4 = document.getElementById('bet-amount-4');
+let betAmount5 = document.getElementById('bet-amount-5');
+
+betAmount1.style.visibility = 'hidden';
+betAmount2.style.visibility = 'hidden';
+betAmount3.style.visibility = 'hidden';
+betAmount4.style.visibility = 'hidden';
+betAmount5.style.visibility = 'hidden';
+
+let betPrompt = document.getElementById('betPrompt');
+let dealPrompt = document.getElementById('dealPrompt');
+let swapPrompt = document.getElementById('swapPrompt');
+let instructionsPrompt = document.getElementById('instructionsPrompt');
+
+betPrompt.style.visibility = 'show';
+
+dealPrompt.style.visibility = 'show';
+swapPrompt.style.visibility = 'hidden';
+instructionsPrompt.style.visibility = 'hidden';
+
+let square0 = document.getElementById(0);
+let square1 = document.getElementById(1);
+let square2 = document.getElementById(2);
+let square3 = document.getElementById(3);
+let square4 = document.getElementById(4);
 
 let score = 100;
 payTable.innerHTML = score;
 
-let bet = 0;
-betTable.innerHTML = bet;
+let card = document.querySelector('.card');
+// card.classList.toggle('is-flipped');
 
-let openModal = document.getElementById('openModal');
-let closeModal = document.getElementById('closeModal');
-let payTableModal = document.getElementById('payTableModal');
+// card.addEventListener( 'click', function() {
+// card.classList.toggle('is-flipped');
+// });
 
-openModal.addEventListener('click', () => {
-  payTableModal.showModal();
-});
-closeModal.addEventListener('click', () => {
-  payTableModal.close();
-});
+// let openModal = document.getElementById('openModal');
+// let closeModal = document.getElementById('closeModal');
+// let payTableModal = document.getElementById('payTableModal');
+// openModal.addEventListener('hover', () => {
+//   payTableModal.showModal();
+// });
+// closeModal.addEventListener('click', () => {
+//   payTableModal.close();
+// });
 
 // let reward;
 const multiplier = {
@@ -69,6 +102,23 @@ const multiplier = {
   'Two pairs': 2,
   'Jacks or Better': 1,
 };
+/* ========================================================================== */
+/* ========================================================================== */
+/* ============================== sound  ============================= */
+/* ========================================================================== */
+/* ========================================================================== */
+
+let cardDealSound = new Audio('https://github.com/eileenssm90/bootcamp-videoPoker/blob/main/sound/cardPlace1.wav?raw=true');
+
+let cardSelectSound = new Audio('https://github.com/eileenssm90/bootcamp-videoPoker/blob/main/sound/cardPlace2.wav?raw=true');
+
+let cardShuffleSound = new Audio('https://github.com/eileenssm90/bootcamp-videoPoker/blob/main/sound/cardSlide1.wav?raw=true');
+
+let chipLaySound = new Audio('https://github.com/eileenssm90/bootcamp-videoPoker/blob/main/sound/chipLay1.wav?raw=true');
+
+let winningSound = new Audio('https://github.com/eileenssm90/bootcamp-videoPoker/blob/main/sound/chipsHandle5.wav?raw=true');
+
+let losingSound = new Audio('https://github.com/eileenssm90/bootcamp-videoPoker/blob/main/sound/chipsHandle6.wav?raw=true');
 
 /* ========================================================================== */
 /* ========================================================================== */
@@ -81,23 +131,23 @@ const multiplier = {
 // eslint-disable-next-line no-var
 var playerHand = [];
 let newDeck = [];
+let newShuffledDeck = [];
 // let myOutputValue = '';
 let cardIdArray = [0, 0, 0, 0, 0];
 let gameMode = 'draw';
 let squareArrayInNumbers = [];
-// const gameMode = 'starting';
 
 // Create deck, repeat 13 * 4
-const createDeck = function (localDeck) {
-  var localDeck = [];
+const createDeck = function () {
+  let localDeck = [];
   const suitArray = ['clubs', 'diamonds', 'hearts', 'spades'];
 
   // Create 4 suits
 
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 4; i += 1) {
   // Create 13 cards
 
-    for (let j = 1; j <= 13; j++) {
+    for (let j = 1; j <= 13; j += 1) {
       const cardRank = j;
       const cardOrder = j;
       let cardName = j;
@@ -116,6 +166,8 @@ const createDeck = function (localDeck) {
         cardName = 'king';
       }
 
+      let cardSuit = suitArray[i];
+
       const card = {
         rank: cardRank,
         name: cardName,
@@ -123,15 +175,13 @@ const createDeck = function (localDeck) {
         order: cardOrder,
       };
 
-      var cardSuit = suitArray[i];
-
-      if (cardSuit == 'diamonds') {
+      if (cardSuit === 'diamonds') {
         card.order += 13;
       }
-      if (cardSuit == 'hearts') {
+      if (cardSuit === 'hearts') {
         card.order += 26;
       }
-      if (cardSuit == 'spades') {
+      if (cardSuit === 'spades') {
         card.order += 39;
       }
 
@@ -145,20 +195,38 @@ newDeck = createDeck();
 console.log(createDeck());
 
 // Shuffle it
-const localDeck2 = [];
-const shuffleDeck = function (localDeck2) {
-  for (let i = 0; i < localDeck2.length; i++) {
-    const currentCard = localDeck2[i];
-    const randomCard = localDeck2[Math.ceil((Math.random() * localDeck2.length) - 1)];
-    localDeck2[i] = randomCard;
-    localDeck2[Math.ceil((Math.random() * localDeck2.length) - 1)] = currentCard;
+// const shuffleDeck = function (localDeck2) {
+//   for (let i = 0; i < localDeck2.length; i += 1) {
+//     const currentCard = localDeck2[i];
+//     const randomCard = localDeck2[Math.floor((Math.random() * localDeck2.length))];
+//     localDeck2[i] = randomCard;
+//     localDeck2[Math.floor((Math.random() * localDeck2.length))] = currentCard;
+//   }
+//   return localDeck2;
+// };
+
+let getRandomIndex = (max) => Math.floor(Math.random() * max);
+
+const shuffleDeck = (cards) => {
+  // Loop over the card deck array once
+  for (let currentIndex = 0; currentIndex < cards.length; currentIndex += 1) {
+    // Select a random index in the deck
+    const randomIndex = getRandomIndex(cards.length);
+    // Select the card that corresponds to randomIndex
+    const randomCard = cards[randomIndex];
+    // Select the card that corresponds to currentIndex
+    const currentCard = cards[currentIndex];
+    // Swap positions of randomCard and currentCard in the deck
+    cards[currentIndex] = randomCard;
+    cards[randomIndex] = currentCard;
   }
-  return localDeck2;
+  // Return the shuffled deck
+  return cards;
 };
 
 // Create a shuffled deck
-newDeck = shuffleDeck(newDeck);
-console.log(newDeck);
+newShuffledDeck = shuffleDeck(newDeck);
+console.log(newShuffledDeck);
 
 // Converting string to image
 // const convertArrayToImageLink = function (array) {
@@ -202,28 +270,19 @@ function sortDeck(array, attribute) {
 
 function convertArrayToImageLink(card) {
   let output = '';
-  // for (let index = 0; index < array.length; index++) {
-  // let chosenId;
-  // const card = array[index];
   const image = `<img src="https://raw.githubusercontent.com/Ardeeter/Blackjack-exercise/main/images/${
     card.rank
   }_of_${
     card.suit
   }.png"/>`;
   output += image;
-  // image.setAttribute('id', index);
 
-  // card.addEventListener('click', (event) => {
-  //   chosenId = event.target.getAttribute('id');
-  //   console.log(`chosenId: ${chosenId}`);
-  // });
-  // }
   return output;
 }
 
 const convertToImage = function (array) {
   let output = '';
-  for (let index = 0; index < array.length; index++) {
+  for (let index = 0; index < array.length; index += 1) {
     const card = array[index];
     const image = `<img src="https://raw.githubusercontent.com/Ardeeter/Blackjack-exercise/main/images/${
       card.rank
@@ -235,78 +294,238 @@ const convertToImage = function (array) {
   return output;
 };
 
-// drawCard();
-
 function drawCard() {
   for (let i = 0; i < 5; i += 1) {
-    playerHand.push(newDeck.pop());
+    playerHand.push(newShuffledDeck.pop());
+
+    cardDealSound.play();
+
     // Convert to image; loop 5 times
+
     sortDeck(playerHand, 'rank');
     // myOutputValue = convertArrayToImageLink(playerHand);
     // outputBox.innerHTML = myOutputValue;
-  //   // return myOutputValue;
+    //   // return myOutputValue;
+    console.log(playerHand);
   }
-  // console.log(playerHand);
+// console.log(playerHand);
 }
 
+// const cardNameTally = {};
+// for (let i = 0; i < playerHand.length; i += 1) {
+//   const cardName = playerHand[i].name;
+//   if (cardName in cardNameTally) {
+//     cardNameTally[cardName] += 1;
+//   }
+//   else {
+//     cardNameTally[cardName] = 1;
+//   }
+// }
+// // for (cardName in cardNameTally) {
+// //   // console.log(`There are ${cardNameTally[cardName]} ${cardName}s in the hand`);
+// // }
+// // // console.log(cardNameTally);
+// return cardNameTally;
+
+const squareArray = [];
+
 function createSquares() {
+  // let squares = document.getElementsByClassName('square');
+
+  square0.innerHTML = convertArrayToImageLink(playerHand[0]);
+  square1.innerHTML = convertArrayToImageLink(playerHand[1]);
+  square2.innerHTML = convertArrayToImageLink(playerHand[2]);
+  square3.innerHTML = convertArrayToImageLink(playerHand[3]);
+  square4.innerHTML = convertArrayToImageLink(playerHand[4]);
+
+  // console.log(square0.innerHTML);
   // note that square array has to be here to hold correctly
-  const squareArray = [];
-  for (let i = 0; i < playerHand.length; i += 1) {
-    let square = [];
-    let chosenId;
+  // cardDealSound.play();
 
-    square = document.createElement('div');
-    square.setAttribute('class', 'square');
-    square.setAttribute('id', i);
-    square.innerHTML = convertArrayToImageLink(playerHand[i]);
+  squareArray.push(square0);
+  squareArray.push(square1);
+  squareArray.push(square2);
+  squareArray.push(square3);
+  squareArray.push(square4);
 
-    grid.appendChild(square);
+  squareArray.forEach((square) => {
     square.addEventListener('click', (event) => {
-      chosenId = event.target.getAttribute('id');
+      chosenId = event.currentTarget.getAttribute('id');
+      // use currentTarget instead of Target to make img clickable
       console.log(`chosenId: ${chosenId}`);
+
       if (squareArray.includes(chosenId) === true) {
+        cardDealSound.play();
         squareArray.splice(squareArray.indexOf(chosenId, 1));
-        square.style.height = '50px';
+        square.style.height = '100px';
         cardIdArray[chosenId] = 0;
       }
       else if (squareArray.includes(chosenId) === false) {
+        cardDealSound.play();
         squareArray.push(chosenId);
 
-        square.style.height = '100px';
-        .scale-up-center {
-	-webkit-animation: scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
-	        animation: scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
-}
+        square.style.height = '150px';
+        // square.style.width = auto;
         cardIdArray[chosenId] = 1;
       }
-      // if (clickMode === 'hold') {
-      //   squareArray.push(chosenId);
-      //   square.style.height = '100px';
-      //   clickMode = 'unhold';
-      // }
-      // else if (clickMode === 'unhold') {
-      //   squareArray.splice(squareArray.indexOf(chosenId));
-      //   square.style.height = '50px';
-      //   clickMode = 'hold';
-      // }
-      squareArrayInNumbers = squareArray.map((element) => Number(element));
-
-      console.log(`squareArrayInNumbers: ${squareArrayInNumbers}`);
-      console.log(cardIdArray);
     });
-  }
+  });
 }
 
+//   console.log(squareArray);
+
+//   for (let i = 0; i < playerHand.length; i += 1) {
+//     let square = [];
+//     let chosenId;
+
+//     square = document.createElement('div');
+//     square.setAttribute('class', 'square');
+//     square.setAttribute('id', i);
+//     square.setAttribute('name', `square${i}`);
+
+//     square.innerHTML = convertArrayToImageLink(playerHand[i]);
+
+//     grid.appendChild(square);
+//     square.addEventListener('click', (event) => {
+//       chosenId = event.currentTarget.getAttribute('id');
+//       // use currentTarget instead of Target to make img clickable
+//       console.log(`chosenId: ${chosenId}`);
+
+//       if (squareArray.includes(chosenId) === true) {
+//         cardDealSound.play();
+//         squareArray.splice(squareArray.indexOf(chosenId, 1));
+//         square.style.height = '100px';
+//         cardIdArray[chosenId] = 0;
+//       }
+//       else if (squareArray.includes(chosenId) === false) {
+//         cardDealSound.play();
+//         squareArray.push(chosenId);
+
+//         square.style.height = '150px';
+//         // square.style.width = auto;
+//         cardIdArray[chosenId] = 1;
+//       }
+//       // if (clickMode === 'hold') {
+//       //   squareArray.push(chosenId);
+//       //   square.style.height = '100px';
+//       //   clickMode = 'unhold';
+//       // }
+//       // else if (clickMode === 'unhold') {
+//       //   squareArray.splice(squareArray.indexOf(chosenId));
+//       //   square.style.height = '50px';
+//       //   clickMode = 'hold';
+//       // }
+//       squareArrayInNumbers = squareArray.map((element) => Number(element));
+
+//       console.log(`squareArrayInNumbers: ${squareArrayInNumbers}`);
+//       console.log(cardIdArray);
+//       // Added this in to see if I can animate card.
+//       square1 = document.getElementById(i);
+//       console.log(square1);
+//       // cardDealSound.play();
+//     });
+//   }
+// }
+// backup
+// function createSquares() {
+//   // note that square array has to be here to hold correctly
+//   // cardDealSound.play();
+//   const squareArray = [];
+//   for (let i = 0; i < playerHand.length; i += 1) {
+//     let square = [];
+//     let chosenId;
+
+//     square = document.createElement('div');
+//     square.setAttribute('class', 'square');
+//     square.setAttribute('id', i);
+//     square.setAttribute('name', `square${i}`);
+
+//     square.innerHTML = convertArrayToImageLink(playerHand[i]);
+
+//     grid.appendChild(square);
+//     square.addEventListener('click', (event) => {
+//       chosenId = event.currentTarget.getAttribute('id');
+//       // use currentTarget instead of Target to make img clickable
+//       console.log(`chosenId: ${chosenId}`);
+
+//       if (squareArray.includes(chosenId) === true) {
+//         cardDealSound.play();
+//         squareArray.splice(squareArray.indexOf(chosenId, 1));
+//         square.style.height = '100px';
+//         cardIdArray[chosenId] = 0;
+//       }
+//       else if (squareArray.includes(chosenId) === false) {
+//         cardDealSound.play();
+//         squareArray.push(chosenId);
+
+//         square.style.height = '150px';
+//         // square.style.width = auto;
+//         cardIdArray[chosenId] = 1;
+//       }
+//       // if (clickMode === 'hold') {
+//       //   squareArray.push(chosenId);
+//       //   square.style.height = '100px';
+//       //   clickMode = 'unhold';
+//       // }
+//       // else if (clickMode === 'unhold') {
+//       //   squareArray.splice(squareArray.indexOf(chosenId));
+//       //   square.style.height = '50px';
+//       //   clickMode = 'hold';
+//       // }
+//       squareArrayInNumbers = squareArray.map((element) => Number(element));
+
+//       console.log(`squareArrayInNumbers: ${squareArrayInNumbers}`);
+//       console.log(cardIdArray);
+//       // Added this in to see if I can animate card.
+//       square1 = document.getElementById(i);
+//       console.log(square1);
+//       // cardDealSound.play();
+//     });
+//   }
+// }
+
 function shuffleHand() {
+  cardShuffleSound.play();
+
   for (let i = 0; i < cardIdArray.length; i += 1) {
     if (cardIdArray[i] === 0) {
-      playerHand[i] = newDeck.pop();
+      squareArray[i].classList.add('is-flipped');
+      card.classList.add('is-flipped');
+      // playerHand[i] = newShuffledDeck.pop();
     }
   }
   console.log(playerHand);
+  sortDeck(playerHand, 'rank');
+
   return convertToImage(playerHand);
 }
+
+// back-up shuffle hand
+// function shuffleHand() {
+//   for (let i = 0; i < cardIdArray.length; i += 1) {
+//     if (cardIdArray[i] === 0) {
+//       playerHand[i] = newDeck.pop();
+//       // square1.classList.add('slide-out-top');
+//     }
+//   }
+//   console.log(playerHand);
+//   return convertToImage(playerHand);
+// }
+
+// square1.style.visibility = 'hidden';
+
+// function startCountdown() {
+// let showSquare1 = setTimeout(() => {
+//   square1.style.visibility = 'show'; }, 1000);
+
+// var set = setTimeout(() => {
+//   outputBox.innerHTML = "set"}, 1000);
+
+// var go = setTimeout(() => {
+//   outputBox.innerHTML = "go"}, 2000);
+
+// var loading = setTimeout(() => {
+//   outputBox.innerHTML = "..."}, 3000);
 
 /* ========================================================================== */
 /* ========================================================================== */
@@ -332,10 +551,10 @@ function calculateNameTally() {
       cardNameTally[cardName] = 1;
     }
   }
-  for (cardName in cardNameTally) {
-    // console.log(`There are ${cardNameTally[cardName]} ${cardName}s in the hand`);
-  }
-  // console.log(cardNameTally);
+  // for (cardName in cardNameTally) {
+  //   // console.log(`There are ${cardNameTally[cardName]} ${cardName}s in the hand`);
+  // }
+  // // console.log(cardNameTally);
   return cardNameTally;
 }
 
@@ -425,35 +644,45 @@ function calcHandScore() {
   if (Number(Object.values(talliedHandSuit)) === 5) {
     if (talliedHandName.ace === 1 && talliedHandName['10'] === 1 && talliedHandName.jack === 1 && talliedHandName.queen === 1 && talliedHandName.king === 1) {
       // console.log('Royal flush');
+      winningSound.play();
       return 'Royal flush';
     }
     if (checkIfIncreasingRank(arrayOfRankKeysInNumbers) === true) {
+      winningSound.play();
+
       return 'Straight flush';
     }
+    winningSound.play();
     return 'Flush';
   }
   // Two denomination only - Full house, Four of a kind
   if (arrayOfRankKeysInNumbers.length === 2) {
     if (doesArrayMatch(arrayOfRankValueInNumbers, [2, 3]) === true) {
+      winningSound.play();
       return 'Full house';
     }
     if (doesArrayMatch(arrayOfRankValueInNumbers, [1, 4]) === true) {
+      winningSound.play();
       return 'Four of a kind';
     }
   }
   // Three denomination only - Three of a kind, two pairs
   if (arrayOfRankKeysInNumbers.length === 3) {
     if (doesArrayMatch(arrayOfRankValueInNumbers, [1, 1, 3]) === true) {
+      winningSound.play();
       return 'Three of a kind';
     }
     if (doesArrayMatch(arrayOfRankValueInNumbers, [1, 2, 2]) === true) {
+      winningSound.play();
       return 'Two pairs';
     }
   }
   if (talliedHandName.jack === 2) {
+    winningSound.play();
     return 'Jacks or Better';
   }
   // Generic lose
+  losingSound.play();
   return 'You lose';
 }
 
@@ -461,16 +690,25 @@ function calcHandScore() {
 // console.log(`prize: ${multiplier[calcHandScore()] * bet}`);
 
 /* ========================================================================== */
-/* ========================================================================== */
 /* ============================== Buttons ============================= */
 /* ========================================================================== */
 /* ========================================================================== */
 
-// Reshuffle card
 // eslint-disable-next-line prefer-const
 
 buttonDeal.addEventListener('click', () => {
+  // reset
   grid.innerHTML = null;
+  betAmount1.style.visibility = 'hidden';
+  betAmount2.style.visibility = 'hidden';
+  betAmount3.style.visibility = 'hidden';
+  betAmount4.style.visibility = 'hidden';
+  betAmount5.style.visibility = 'hidden';
+
+  swapPrompt.style.visibility = 'visible';
+  dealPrompt.style.visibility = 'hidden';
+  betPrompt.style.visibility = 'hidden';
+
   playerHand = [];
   drawCard();
   createSquares();
@@ -483,7 +721,13 @@ buttonDeal.addEventListener('click', () => {
   }
 });
 
+// let carder = document.getElementById('flip-card-inner');
+
 buttonShuffle.addEventListener('click', () => {
+  // carder.addEventListener('click', () => {
+  // carder.classList.add('is-flipped');
+  // });
+  // showSquare1();
   shuffleHand();
   grid.innerHTML = null;
   // playerHand = [
@@ -504,11 +748,55 @@ buttonShuffle.addEventListener('click', () => {
     score -= bet;
     payTable.innerHTML = score;
   }
+  betPrompt.style.visibility = 'visible';
+  swapPrompt.style.visibility = 'hidden';
+  dealPrompt.style.visibility = 'visible';
 });
 
+// let bounce = document.getElementById('bounce');
+
 buttonBet.addEventListener('click', () => {
-  if (bet <= 5) {
+  console.log(square1);
+  // square1.classList.toggle('is-flipped');
+
+  // square1.classList.add('slide-out-top');
+  // buttonBet.classList.add('slide-out-top');
+  // buttonBet.classList.add(bounce);
+  // buttonBet.addEventListener('animationend', () => {
+  //   buttonBet.classList.remove('rotate-scale-up');
+  // }, { once: true });
+  if (bet < 5) {
     bet += 1;
-    betTable.innerHTML = bet;
+    // betTable.innerHTML = bet;
+    chipLaySound.play();
+
+    if (bet === 1) {
+      betAmount1.style.visibility = 'visible';
+      score -= 1;
+      payTable.innerHTML = score;
+    }
+    if (bet === 2) {
+      betAmount2.style.visibility = 'visible';
+      score -= 1;
+      payTable.innerHTML = score;
+    }
+    if (bet === 3) {
+      betAmount3.style.visibility = 'visible';
+      score -= 1;
+      payTable.innerHTML = score;
+    }
+    if (bet === 4) {
+      betAmount4.style.visibility = 'visible';
+      score -= 1;
+      payTable.innerHTML = score;
+    }
+    if (bet === 5) {
+      betAmount5.style.visibility = 'visible';
+      score -= 1;
+      payTable.innerHTML = score;
+    }
   }
+  // else {
 });
+//   buttonBet.removeEventListener('click');
+// }

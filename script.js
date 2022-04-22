@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-loop-func */
 /* eslint-disable prefer-const */
 /* ========================================================================== */
@@ -38,8 +39,8 @@ let outputBox = document.getElementById('output-div');
 const outputBoxWords = document.getElementById('output-div-words');
 
 let bet = 0;
-let payTable = document.getElementById('payTable');
 let betTable = document.getElementById('betTable');
+let rewardsContainer = document.getElementById('rewardsContainer');
 
 let betAmount1 = document.getElementById('bet-amount-1');
 let betAmount2 = document.getElementById('bet-amount-2');
@@ -56,13 +57,37 @@ betAmount5.style.visibility = 'hidden';
 let betPrompt = document.getElementById('betPrompt');
 let dealPrompt = document.getElementById('dealPrompt');
 let swapPrompt = document.getElementById('swapPrompt');
-let instructionsPrompt = document.getElementById('instructionsPrompt');
+let winningPrompt = document.getElementById('winningPrompt');
+let bankContainer = document.getElementById('bankContainer');
+let totalBetAmount = document.getElementById('total-bet-amount');
 
-betPrompt.style.visibility = 'show';
+// let holdPrompt0 = document.getElementById('holdPrompt0');
+// let holdPrompt1 = document.getElementById('holdPrompt1');
+// let holdPrompt2 = document.getElementById('holdPrompt2');
+// let holdPrompt3 = document.getElementById('holdPrompt3');
+// let holdPrompt4 = document.getElementById('holdPrompt4');
 
-dealPrompt.style.visibility = 'show';
+// let instructionsPrompt = document.getElementById('instructionsPrompt');
+
+betPrompt.style.visibility = 'visible';
+dealPrompt.style.visibility = 'hidden';
 swapPrompt.style.visibility = 'hidden';
-instructionsPrompt.style.visibility = 'hidden';
+winningPrompt.style.visibility = 'hidden';
+
+// holdPrompt0.style.visibility = 'hidden';
+// holdPrompt1.style.visibility = 'hidden';
+// holdPrompt2.style.visibility = 'hidden';
+// holdPrompt3.style.visibility = 'hidden';
+// holdPrompt4.style.visibility = 'hidden';
+
+// let holdPromptArray = [];
+// holdPromptArray.push(holdPrompt0);
+// holdPromptArray.push(holdPrompt1);
+// holdPromptArray.push(holdPrompt2);
+// holdPromptArray.push(holdPrompt3);
+// holdPromptArray.push(holdPrompt4);
+
+// instructionsPrompt.style.visibility = 'hidden';
 
 let square0 = document.getElementById(0);
 let square1 = document.getElementById(1);
@@ -70,10 +95,11 @@ let square2 = document.getElementById(2);
 let square3 = document.getElementById(3);
 let square4 = document.getElementById(4);
 
+let payTable = document.getElementById('payTable');
 let score = 100;
 payTable.innerHTML = score;
 
-let card = document.querySelector('.card');
+// let card = document.querySelector('.card');
 // card.classList.toggle('is-flipped');
 
 // card.addEventListener( 'click', function() {
@@ -116,7 +142,7 @@ let cardShuffleSound = new Audio('https://github.com/eileenssm90/bootcamp-videoP
 
 let chipLaySound = new Audio('https://github.com/eileenssm90/bootcamp-videoPoker/blob/main/sound/chipLay1.wav?raw=true');
 
-let winningSound = new Audio('https://github.com/eileenssm90/bootcamp-videoPoker/blob/main/sound/chipsHandle5.wav?raw=true');
+let winningSound = new Audio('https://github.com/eileenssm90/bootcamp-videoPoker/blob/main/sound/crowdApplause.mp3?raw=true');
 
 let losingSound = new Audio('https://github.com/eileenssm90/bootcamp-videoPoker/blob/main/sound/chipsHandle6.wav?raw=true');
 
@@ -338,6 +364,12 @@ function createSquares() {
   square3.innerHTML = convertArrayToImageLink(playerHand[3]);
   square4.innerHTML = convertArrayToImageLink(playerHand[4]);
 
+  grid.appendChild(square0);
+  grid.appendChild(square1);
+  grid.appendChild(square2);
+  grid.appendChild(square3);
+  grid.appendChild(square4);
+
   // console.log(square0.innerHTML);
   // note that square array has to be here to hold correctly
   // cardDealSound.play();
@@ -357,14 +389,15 @@ function createSquares() {
       if (squareArray.includes(chosenId) === true) {
         cardDealSound.play();
         squareArray.splice(squareArray.indexOf(chosenId, 1));
-        square.style.height = '100px';
+        square.style.height = '150px';
         cardIdArray[chosenId] = 0;
       }
+
       else if (squareArray.includes(chosenId) === false) {
         cardDealSound.play();
         squareArray.push(chosenId);
 
-        square.style.height = '150px';
+        square.style.height = '200px';
         // square.style.width = auto;
         cardIdArray[chosenId] = 1;
       }
@@ -486,18 +519,29 @@ function createSquares() {
 
 function shuffleHand() {
   cardShuffleSound.play();
+  square0.style.height = '150px';
+  square1.style.height = '150px';
+  square2.style.height = '150px';
+  square3.style.height = '150px';
+  square4.style.height = '150px';
 
   for (let i = 0; i < cardIdArray.length; i += 1) {
     if (cardIdArray[i] === 0) {
-      squareArray[i].classList.add('is-flipped');
-      card.classList.add('is-flipped');
-      // playerHand[i] = newShuffledDeck.pop();
+      // squareArray[i].classList.add('is-flipped');
+      // card.classList.add('is-flipped');
+      playerHand[i] = newShuffledDeck.pop();
     }
   }
   console.log(playerHand);
   sortDeck(playerHand, 'rank');
 
   return convertToImage(playerHand);
+}
+function resetGame() {
+  grid.innerHTML = null;
+  totalBetAmount.innerHTML = null;
+  rewardsContainer.innerHTML = null;
+  outputBoxWords.innerHTML = "That was a great game! Let's play again. Start by drawing your cards";
 }
 
 // back-up shuffle hand
@@ -642,14 +686,13 @@ function calcHandScore() {
 
   // One suit only - Royal flush, straight flush, flush
   if (Number(Object.values(talliedHandSuit)) === 5) {
-    if (talliedHandName.ace === 1 && talliedHandName['10'] === 1 && talliedHandName.jack === 1 && talliedHandName.queen === 1 && talliedHandName.king === 1) {
+    if (talliedHandName.ace === 1 && talliedHandName.ten === 1 && talliedHandName.jack === 1 && talliedHandName.queen === 1 && talliedHandName.king === 1) {
       // console.log('Royal flush');
       winningSound.play();
       return 'Royal flush';
     }
     if (checkIfIncreasingRank(arrayOfRankKeysInNumbers) === true) {
       winningSound.play();
-
       return 'Straight flush';
     }
     winningSound.play();
@@ -659,10 +702,12 @@ function calcHandScore() {
   if (arrayOfRankKeysInNumbers.length === 2) {
     if (doesArrayMatch(arrayOfRankValueInNumbers, [2, 3]) === true) {
       winningSound.play();
+
       return 'Full house';
     }
     if (doesArrayMatch(arrayOfRankValueInNumbers, [1, 4]) === true) {
       winningSound.play();
+
       return 'Four of a kind';
     }
   }
@@ -670,15 +715,18 @@ function calcHandScore() {
   if (arrayOfRankKeysInNumbers.length === 3) {
     if (doesArrayMatch(arrayOfRankValueInNumbers, [1, 1, 3]) === true) {
       winningSound.play();
+
       return 'Three of a kind';
     }
     if (doesArrayMatch(arrayOfRankValueInNumbers, [1, 2, 2]) === true) {
       winningSound.play();
+
       return 'Two pairs';
     }
   }
   if (talliedHandName.jack === 2) {
     winningSound.play();
+
     return 'Jacks or Better';
   }
   // Generic lose
@@ -694,11 +742,9 @@ function calcHandScore() {
 /* ========================================================================== */
 /* ========================================================================== */
 
-// eslint-disable-next-line prefer-const
-
 buttonDeal.addEventListener('click', () => {
   // reset
-  grid.innerHTML = null;
+  // grid.innerHTML = null;
   betAmount1.style.visibility = 'hidden';
   betAmount2.style.visibility = 'hidden';
   betAmount3.style.visibility = 'hidden';
@@ -710,53 +756,105 @@ buttonDeal.addEventListener('click', () => {
   betPrompt.style.visibility = 'hidden';
 
   playerHand = [];
+
   drawCard();
   createSquares();
+
   sortDeck(playerHand, 'rank');
   if (calcHandScore() !== 'You lose') {
     outputBoxWords.innerHTML = `You've already got a ${calcHandScore()}. Pick wisely and you may win even bigger.`;
   }
   else {
-    outputBoxWords.innerHTML = "You haven't won anything yet. Shuffle your cards.";
+    outputBoxWords.innerHTML = "You haven't won anything yet. Pick the cards you want to hold. Then, click DISCARD to shuffle the rest of your hand.";
   }
 });
 
 // let carder = document.getElementById('flip-card-inner');
 
 buttonShuffle.addEventListener('click', () => {
-  // carder.addEventListener('click', () => {
-  // carder.classList.add('is-flipped');
-  // });
-  // showSquare1();
   shuffleHand();
-  grid.innerHTML = null;
-  // playerHand = [
-  //   { rank: 11, suit: 'hearts', name: 'jacks' },
-  //   { rank: 11, suit: 'hearts', name: 'jacks' },
-  //   { rank: 11, suit: 'hearts', name: 'jacks' },
-  //   { rank: 11, suit: 'hearts', name: 'jacks' },
-  //   { rank: 5, suit: 'diamonds', name: '5' },
-  // ];
-  createSquares();
-  if (calcHandScore() !== 'You lose') {
-    outputBoxWords.innerHTML = `You won $${multiplier[calcHandScore()] * bet} with ${calcHandScore()}.`;
-    score = score - bet + multiplier[calcHandScore()] * bet;
-    payTable.innerHTML = score;
-  }
-  else {
-    outputBoxWords.innerHTML = 'You lose. Try again.';
-    score -= bet;
-    payTable.innerHTML = score;
-  }
   betPrompt.style.visibility = 'visible';
   swapPrompt.style.visibility = 'hidden';
-  dealPrompt.style.visibility = 'visible';
+  dealPrompt.style.visibility = 'hidden';
+  // royal suit
+  playerHand = [
+    { rank: 1, suit: 'hearts', name: 'ace' },
+    { rank: 10, suit: 'hearts', name: 'ten' },
+    { rank: 11, suit: 'hearts', name: 'jack' },
+    { rank: 12, suit: 'hearts', name: 'queen' },
+    { rank: 13, suit: 'hearts', name: 'king' },
+  ];
+  // straight flush
+  // playerHand = [
+  //   { rank: 1, suit: 'hearts', name: 'ace' },
+  //   { rank: 2, suit: 'hearts', name: 'two' },
+  //   { rank: 3, suit: 'hearts', name: 'three' },
+  //   { rank: 4, suit: 'hearts', name: 'four' },
+  //   { rank: 5, suit: 'hearts', name: 'five' },
+  // ];
+  square0.innerHTML = convertArrayToImageLink(playerHand[0]);
+  square1.innerHTML = convertArrayToImageLink(playerHand[1]);
+  square2.innerHTML = convertArrayToImageLink(playerHand[2]);
+  square3.innerHTML = convertArrayToImageLink(playerHand[3]);
+  square4.innerHTML = convertArrayToImageLink(playerHand[4]);
+
+  grid.appendChild(square0);
+  grid.appendChild(square1);
+  grid.appendChild(square2);
+  grid.appendChild(square3);
+  grid.appendChild(square4);
+
+  // console.log(square0.innerHTML);
+  // note that square array has to be here to hold correctly
+  // cardDealSound.play();
+
+  squareArray.push(square0);
+  squareArray.push(square1);
+  squareArray.push(square2);
+  squareArray.push(square3);
+  squareArray.push(square4);
+
+  // createSquares();
+  // calcHandScore();
+  if (calcHandScore() !== 'You lose') {
+    winningPrompt.style.visibility = 'visible';
+
+    outputBoxWords.innerHTML = `You won $${multiplier[calcHandScore()] * bet} with ${calcHandScore()}. Let's play another round. Start by placing a bet.`;
+    score = score - bet + multiplier[calcHandScore()] * bet;
+    payTable.innerHTML = score;
+    let prizeMoney = multiplier[calcHandScore()] * bet;
+    for (let i = 0; i < prizeMoney; i += 1) {
+      let img = document.createElement('img');
+      img.src = 'https://raw.githubusercontent.com/eileenssm90/bootcamp-videoPoker/main/images/chip.png';
+      img.setAttribute('class', 'winningChips');
+      rewardsContainer.appendChild(img);
+    }
+  }
+  else {
+    outputBoxWords.innerHTML = 'You did not win anything. Play again. Start by placing a bet.';
+    score -= bet;
+    payTable.innerHTML = score;
+    // setTimeout(resetGame(), 3000);
+  }
 });
+
+//   let numberOfCoins = document.createElement('div');
+//   rewardsContainer.appendChild(numberOfCoins);
+// }
+// rewardsContainer.container
 
 // let bounce = document.getElementById('bounce');
 
 buttonBet.addEventListener('click', () => {
+  grid.innerHTML = null;
+  // totalBetAmount.innerHTML = null;
+  rewardsContainer.innerHTML = null;
+  outputBoxWords.innerHTML = 'Start by drawing your cards';
   console.log(square1);
+  betPrompt.style.visibility = 'visible';
+  swapPrompt.style.visibility = 'hidden';
+  dealPrompt.style.visibility = 'visible';
+  winningPrompt.style.visibility = 'hidden';
   // square1.classList.toggle('is-flipped');
 
   // square1.classList.add('slide-out-top');
@@ -796,6 +894,13 @@ buttonBet.addEventListener('click', () => {
       payTable.innerHTML = score;
     }
   }
+  // if (gameMode = 'reset') {
+  //   grid.innerHTML = null;
+  //   totalBetAmount.innerHTML = null;
+  //   rewardsContainer.innerHTML = null;
+  //   outputBoxWords.innerHTML = null;
+  //   gameMode = 'game';
+  // }
   // else {
 });
 //   buttonBet.removeEventListener('click');

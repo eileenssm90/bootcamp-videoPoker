@@ -1,43 +1,71 @@
+h1 {
+  font-size: 60px;
+  font-family: "Teko", sans-serif;
+  padding-top: 50px;
+  margin: 0px;
+}
+
+h2 {
+  margin: 0px; /* padding-bottom: 6rem; */
+  grid-column: 1;
+  grid-row: 1;
+  z-index: 1;
+  font-family: "Teko", sans-serif;
+  font-size: 29px;
+  text-transform: uppercase;
+  animation: glow 1s ease-in-out infinite alternate;
+  text-align: center;
+}
+
+h4 {
+  font-family: "Teko", sans-serif;
+}
+
 body {
   font-family: "Open Sans", sans-serif;
   /* margin-left: 30px;
   margin-right: 30px; */
   color: white;
   background-image: url("https://raw.githubusercontent.com/eileenssm90/bootcamp-videoPoker/main/images/pokerTable2.jpg");
-  height: 100vh;
+  /* height: 100vh; */
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
-  align-items: center;
+  /* align-items: center; */
   justify-items: center;
-  overflow: hidden;
-
-  /* background-position: center; 
-  background-repeat: no-repeat;
-  background-size: center;*/
+  /* justify-content: center; */
+  background-size: cover;
+  /* background-repeat: no-repeat; */
+  background-position: center top;
 }
 
-h3 {
-  /* margin: 0; */
-  /* padding-bottom: 6rem; */
-  grid-column: 1;
-  grid-row: 1;
-  z-index: 1;
-  font-family: "Teko", sans-serif;
-  font-size: 20px;
-  text-transform: uppercase;
-  animation: glow 1s ease-in-out infinite alternate;
+.dataHeader {
+  width: 110px;
+  text-align: left;
+}
+
+td {
+  width: 100px;
   text-align: center;
 }
 
 #topContainer,
-#mediumContainer,
-#lowerContainer,
+#middleContainer,
 #grid {
   width: 100%;
+  /* height: 100px; */
+
   display: flex;
   flex-direction: row;
   justify-content: center;
+}
+
+#lowerContainer {
+  display: flex;
+  /* height: 200px; */
+
+  flex-direction: row;
+  justify-content: flex-end;
 }
 
 #dealContainer,
@@ -45,23 +73,79 @@ h3 {
 #betContainer,
 #bankContainer,
 #instructionsContainer {
+  padding: 10px;
+  height: 200px;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
+#winningContainer {
+  padding-top: 20px;
+  height: 200px;
+  width: 100%;
+}
+
+#allBetPrompts {
+  display: flex;
+  flex-direction: row;
+  width: 40%;
+  justify-content: space-between;
+}
+
+#overall {
+  display: space-around;
+  flex-direction: column;
+
+  /* justify-content: center; */
+  /* align-items: center; */
+}
+
+.holdPrompt {
+  /* padding: 20px; */
+  justify-content: center;
+}
+
+#button-image {
+  height: 100px;
+}
+
+#grid {
+  width: 100%;
+  height: 150px;
+}
+
+.square {
+  /* padding: 10px;
+  margin: 10px; */
+  /* background-color: white; */
+  display: inline-flex;
+  height: 150px;
+  width: auto;
+  /* border-radius: 8px; */
+  vertical-align: top;
+  /* z-index: 1; */
+}
 
 .grid {
   width: 100%;
+  height: 200px;
+  padding-right: 0px;
+  display: flex;
+  justify-content: center;
+}
+
+#grid img {
+  display: inline-flex;
+  /* max-width: 150px; */
 }
 
 .square {
   /* padding: 10px;
   margin: 10px; */
   background-color: white;
-  display: inline-flex;
-  height: 100px;
+  /* height: 200px; */
   width: auto;
   /* border-radius: 8px; */
   /* z-index: 1; */
@@ -70,7 +154,6 @@ h3 {
 .button {
   /* display: inline-block; */
   padding: none;
-  font-size: 24px;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
@@ -79,8 +162,7 @@ h3 {
   background-color: transparent;
 
   border: none;
-  height: 200px;
-  width: 200px;
+  height: 70px;
   background-size: cover;
 }
 
@@ -88,14 +170,28 @@ h3 {
   text-align: center;
 }
 
-#output-div img {
-  display: inline-flex;
-  max-width: 100px;
-}
-
 #output-div {
   float: top;
   text-align: center;
+  /* height: 220px; */
+}
+
+#output-div-words {
+  padding: 10px;
+  /* height: 50px; */
+  z-index: 2;
+}
+
+#rewardsContainer {
+  flex-wrap: wrap;
+  width: 300px;
+  justify-content: center;
+  align-content: center;
+  text-align: center;
+}
+
+.winningChips {
+  margin-left: -45px;
 }
 
 #total-bet-amount {
@@ -107,7 +203,8 @@ h3 {
 #instructionsContainer img,
 #openModal img {
   background-color: transparent;
-  border: none;
+  background-size: cover;
+  padding: 0px;
   height: 100px;
   object-fit: cover;
   justify-content: center;
@@ -117,119 +214,72 @@ h3 {
 }
 
 #betButton img,
-#total-bet-amount img {
+#total-bet-amount img,
+#rewardsContainer img {
   height: 50px;
 }
 
-body {
-  font-family: sans-serif;
-}
-
-.scene {
-  width: 200px;
-  height: 260px;
-  border: 1px solid #ccc;
-  margin: 40px 0;
-  perspective: 600px;
-}
-
-.card .square {
-  width: 100%;
-  height: 100%;
-  transition: transform 0.5s;
-  transform-style: preserve-3d;
-  cursor: pointer;
-  position: relative;
-}
-
-.card.is-flipped {
-  transform: rotateY(180deg);
-}
-
-.card__face {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  line-height: 260px;
-  color: white;
-  text-align: center;
-  font-weight: bold;
-  font-size: 40px;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-
-.card__face--front {
-  /* background: red; */
-  z-index: 1;
-}
-
-.card__face--back {
-  background-color: blue;
-  transform: rotateY(180deg);
-  z-index: 0;
-}
-
-/*
 #payTableModal {
   display: none;
   position: absolute;
-  right: 100px;
-  bottom: 100px
+  right: 300px;
+  bottom: 220px;
+  border-style: none;
 }
-    
+
 #openModal:hover + #payTableModal {
   display: block;
   color: white;
-  border: 1px solid 
 }
 
 #openModal .tooltiptext::after {
   content: " ";
   position: absolute;
-  top: 100%; 
+  top: 100%;
   left: 50%;
   margin-left: -5px;
   border-width: 5px;
-  border-style: solid;
   border-color: black transparent transparent transparent;
 }
-*/
 
 #output-div img:hover {
-  background-color: #3e8e41;
-  border-radius: 10%;
+  color: rgba(255, 255, 255, 1);
+  box-shadow: 0px 20px 700px rgba(181, 187, 186, 0.644);
 }
 
 #dealButton img:hover {
-  background-color: #3e8e41;
-  border-radius: 10%;
+  color: rgba(255, 255, 255, 1);
+  box-shadow: 20px 20px 700px rgba(181, 187, 186, 0.644);
 }
 
 #shuffleButton img:hover {
-  background-color: #3e8e41;
-  border-radius: 10%;
+  color: rgba(255, 255, 255, 1);
+  box-shadow: 0px 20px 700px rgba(181, 187, 186, 0.644);
 }
 
 #betButton img:hover {
-  background-color: #3e8e41;
-  border-radius: 10%;
+  color: rgba(255, 255, 255, 1);
+  box-shadow: 0px 20px 700px rgba(181, 187, 186, 0.644);
 }
 
 #output-div img:active {
-  background-color: #3e8e41;
-  box-shadow: 0 5px #666;
+  color: rgba(255, 255, 255, 1);
+  box-shadow: 0px 20px 700px rgba(181, 187, 186, 0.644);
+
   transform: translateY(2px);
 }
 
 #dealButton:active {
   background-color: #3e8e41;
+  height: 100px;
   box-shadow: 0 5px #666;
   transform: translateY(2px);
 }
 
 #shuffleButton:active {
   background-color: #3e8e41;
+  height: 100px;
+
   box-shadow: 0 5px #666;
   transform: translateY(2px);
 }
@@ -246,36 +296,5 @@ body {
   }
   to {
     text-shadow: 0 0 50px white, 0 0 50px white;
-  }
-}
-
-.slide-out-top {
-  -webkit-animation: slide-out-top 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53)
-    both;
-  animation: slide-out-top 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
-}
-
-@-webkit-keyframes slide-out-top {
-  0% {
-    -webkit-transform: translateY(0);
-    transform: translateY(0);
-    opacity: 1;
-  }
-  100% {
-    -webkit-transform: translateY(-1000px);
-    transform: translateY(-1000px);
-    opacity: 0;
-  }
-}
-@keyframes slide-out-top {
-  0% {
-    -webkit-transform: translateY(0);
-    transform: translateY(0);
-    opacity: 1;
-  }
-  100% {
-    -webkit-transform: translateY(-1000px);
-    transform: translateY(-1000px);
-    opacity: 0;
   }
 }

@@ -2,18 +2,17 @@
 <html>
   <head>
     <title>Eileen's Video Poker</title>
+
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
     <link rel="stylesheet" href="styles.css" />
-
-    <!-- <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Teko:wght@600&display=swap"
       rel="stylesheet"
-      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-      crossorigin="anonymous"
-    /> -->
+    />
 
     <style>
       /* increase header font size on wider screens */
@@ -26,16 +25,15 @@
   </head>
 
   <body>
-    <h1 id="header">Video poker</h1>
-    <div id="topContainer">
-      <div id="output-div-words">Choose the number of cards to draw</div>
+    <div>
+      <h1 id="header">Video Poker</h1>
     </div>
 
-    <div id="mediumContainer">
+    <div id="topContainer">
       <div id="dealContainer">
-        <h3><span class="one" id="dealPrompt">Draw cards</span></h3>
-        <div id="dealButton">
-          <button class="button" type="button">
+        <h2><span class="one" id="dealPrompt">Draw cards</span></h2>
+        <div>
+          <button class="button" type="button" id="dealButton">
             <img
               class="button-image"
               src="https://raw.githubusercontent.com/eileenssm90/bootcamp-videoPoker/main/images/backOfCard.png"
@@ -45,7 +43,7 @@
       </div>
 
       <div id="swapContainer">
-        <h3><span class="one" id="swapPrompt">Swap cards</span></h3>
+        <h2><span class="one" id="swapPrompt">Discard pile</span></h2>
         <button id="shuffleButton" class="button" type="button">
           <img
             class="button-image"
@@ -53,8 +51,35 @@
           />
         </button>
       </div>
+    </div>
 
-      <div id="betContainer">
+    <div id="output-div-words">
+      <div>Start by drawing your cards</div>
+    </div>
+
+    <!-- <div id="allBetPrompts">
+      <h2><span class="one holdPrompt" id="holdPrompt0">Hold</span></h2>
+      <h2><span class="one holdPrompt" id="holdPrompt1">Hold</span></h2>
+      <h2><span class="one holdPrompt" id="holdPrompt2">Hold</span></h2>
+      <h2><span class="one holdPrompt" id="holdPrompt3">Hold</span></h2>
+      <h2><span class="one holdPrompt" id="holdPrompt4">Hold</span></h2>
+    </div> -->
+
+    <div id="grid">
+      <div id="0" class="square"></div>
+      <div id="1" class="square"></div>
+      <div id="2" class="square"></div>
+      <div id="3" class="square"></div>
+      <div id="4" class="square"></div>
+    </div>
+
+    <div id="lowerContainer">
+      <div id="winningContainer">
+        <h2><span class="one" id="winningPrompt">Winnings</span></h2>
+        <div id="rewardsContainer"></div>
+      </div>
+      <div id="bankContainer">
+        <h2><span class="one" id="betPrompt">Place bets</span></h2>
         <div id="total-bet-amount">
           <img
             id="bet-amount-1"
@@ -77,53 +102,16 @@
             src="https://raw.githubusercontent.com/eileenssm90/bootcamp-videoPoker/main/images/chip.png"
           />
         </div>
-      </div>
-    </div>
-
-    <div id="grid" class="grid"></div>
-
-    <div class="scene scene--card">
-      <div class="card">
-        <div class="card__face card__face--front">front</div>
-        <div class="card__face card__face--back">back</div>
-      </div>
-    </div>
-    <p>Click card to flip.</p>
-
-    <div id="lowerContainer" class="scene scene--card">
-      <div id="0" class="square card">
-        <div class="card__face card__face--front"></div>
-        <div class="card__face card__face--back">
-          <img
-            src="https://raw.githubusercontent.com/eileenssm90/bootcamp-videoPoker/main/images/backOfCard.png"
-          />
-        </div>
-      </div>
-      <div id="1" class="square"></div>
-
-      <div id="2" class="square"></div>
-      <div id="3" class="square"></div>
-      <div id="4" class="square"></div>
-
-      <div id="bankContainer">
-        <h3><span class="one" id="betPrompt">Place bets</span></h3>
         <button class="button" type="button" id="betButton">
           <img
             class="button-image"
             src="https://raw.githubusercontent.com/eileenssm90/bootcamp-videoPoker/main/images/chip.png"
           />
         </button>
-        <table>
-          <tr>
-            <th>Remaining coins</th>
-            <td id="payTable"></td>
-          </tr>
-        </table>
+        <div id="payTable"></div>
       </div>
 
       <div id="instructionsContainer">
-        <h3><span class="one" id="instructionsPrompt">Instructions</span></h3>
-
         <div class="tooltip" id="openModal">
           <img
             src="https://raw.githubusercontent.com/eileenssm90/bootcamp-videoPoker/main/images/phoneBack.png"
@@ -133,39 +121,39 @@
           <h2>Pay Table</h2>
           <table>
             <tr>
-              <th>Your hand</th>
+              <th class="dataHeader">Your hand</th>
               <th>Multiplier</th>
             </tr>
             <tr>
-              <td>Royal flush</td>
+              <td class="dataHeader">Royal flush</td>
               <td>250</td>
             </tr>
             <tr>
-              <td>Straight flush</td>
+              <td class="dataHeader">Straight flush</td>
               <td>50</td>
             </tr>
             <tr>
-              <td>Flush</td>
+              <td class="dataHeader">Flush</td>
               <td>6</td>
             </tr>
             <tr>
-              <td>Full house</td>
+              <td class="dataHeader">Full house</td>
               <td>9</td>
             </tr>
             <tr>
-              <td>Four of a kind</td>
+              <td class="dataHeader">Four of a kind</td>
               <td>25</td>
             </tr>
             <tr>
-              <td>Three of a kind</td>
+              <td class="dataHeader">Three of a kind</td>
               <td>3</td>
             </tr>
             <tr>
-              <td>Two pairs</td>
+              <td class="dataHeader">Two pairs</td>
               <td>2</td>
             </tr>
             <tr>
-              <td>Jacks or Better</td>
+              <td class="dataHeader">Jacks or Better</td>
               <td>1</td>
             </tr>
           </table>
@@ -214,9 +202,10 @@
           <button id="closeModal">Close</button>
         </dialog> -->
       </div>
-    </div>
 
-    <!-- Import program logic -->
-    <script src="script.js"></script>
+      <!-- Import program logic -->
+      <script src="script.js"></script>
+      <!-- <script src="confetti.js"></script> -->
+    </div>
   </body>
 </html>

@@ -160,8 +160,8 @@ let newDeck = [];
 let newShuffledDeck = [];
 // let myOutputValue = '';
 let cardIdArray = [0, 0, 0, 0, 0];
-let gameMode = 'draw';
-let squareArrayInNumbers = [];
+// let gameMode = 'draw';
+// let squareArrayInNumbers = [];
 
 // Create deck, repeat 13 * 4
 const createDeck = function () {
@@ -537,12 +537,12 @@ function shuffleHand() {
 
   return convertToImage(playerHand);
 }
-function resetGame() {
-  grid.innerHTML = null;
-  totalBetAmount.innerHTML = null;
-  rewardsContainer.innerHTML = null;
-  outputBoxWords.innerHTML = "That was a great game! Let's play again. Start by drawing your cards";
-}
+// function resetGame() {
+//   grid.innerHTML = null;
+//   totalBetAmount.innerHTML = null;
+//   rewardsContainer.innerHTML = null;
+//   outputBoxWords.innerHTML = "That was a great game! Let's play again. Start by drawing your cards";
+// }
 
 // back-up shuffle hand
 // function shuffleHand() {
@@ -773,17 +773,19 @@ buttonDeal.addEventListener('click', () => {
 
 buttonShuffle.addEventListener('click', () => {
   shuffleHand();
+  // cardIdArray = [0, 0, 0, 0, 0];
+
   betPrompt.style.visibility = 'visible';
   swapPrompt.style.visibility = 'hidden';
   dealPrompt.style.visibility = 'hidden';
   // royal suit
-  playerHand = [
-    { rank: 1, suit: 'hearts', name: 'ace' },
-    { rank: 10, suit: 'hearts', name: 'ten' },
-    { rank: 11, suit: 'hearts', name: 'jack' },
-    { rank: 12, suit: 'hearts', name: 'queen' },
-    { rank: 13, suit: 'hearts', name: 'king' },
-  ];
+  // playerHand = [
+  //   { rank: 1, suit: 'hearts', name: 'ace' },
+  //   { rank: 10, suit: 'hearts', name: 'ten' },
+  //   { rank: 11, suit: 'hearts', name: 'jack' },
+  //   { rank: 12, suit: 'hearts', name: 'queen' },
+  //   { rank: 13, suit: 'hearts', name: 'king' },
+  // ];
   // straight flush
   // playerHand = [
   //   { rank: 1, suit: 'hearts', name: 'ace' },
@@ -820,7 +822,7 @@ buttonShuffle.addEventListener('click', () => {
     winningPrompt.style.visibility = 'visible';
 
     outputBoxWords.innerHTML = `You won $${multiplier[calcHandScore()] * bet} with ${calcHandScore()}. Let's play another round. Start by placing a bet.`;
-    score = score - bet + multiplier[calcHandScore()] * bet;
+    score += multiplier[calcHandScore()] * bet;
     payTable.innerHTML = score;
     let prizeMoney = multiplier[calcHandScore()] * bet;
     for (let i = 0; i < prizeMoney; i += 1) {
@@ -828,13 +830,16 @@ buttonShuffle.addEventListener('click', () => {
       img.src = 'https://raw.githubusercontent.com/eileenssm90/bootcamp-videoPoker/main/images/chip.png';
       img.setAttribute('class', 'winningChips');
       rewardsContainer.appendChild(img);
+      bet = 0;
+      // cardIdArray = [0, 0, 0, 0, 0];
     }
   }
   else {
     outputBoxWords.innerHTML = 'You did not win anything. Play again. Start by placing a bet.';
-    score -= bet;
+    // score -= bet;
     payTable.innerHTML = score;
     // setTimeout(resetGame(), 3000);
+    bet = 0;
   }
 });
 
@@ -846,11 +851,13 @@ buttonShuffle.addEventListener('click', () => {
 // let bounce = document.getElementById('bounce');
 
 buttonBet.addEventListener('click', () => {
+  // cardIdArray = [0, 0, 0, 0, 0];
+
   grid.innerHTML = null;
   // totalBetAmount.innerHTML = null;
   rewardsContainer.innerHTML = null;
   outputBoxWords.innerHTML = 'Start by drawing your cards';
-  console.log(square1);
+  // console.log(square1);
   betPrompt.style.visibility = 'visible';
   swapPrompt.style.visibility = 'hidden';
   dealPrompt.style.visibility = 'visible';
